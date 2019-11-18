@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import Http404
 from .models import Listing
 from django.core.paginator import Paginator
 from btre.choices import state_choices,price_choices,bedroom_choices
@@ -6,7 +7,7 @@ from btre.choices import state_choices,price_choices,bedroom_choices
 
 def index(request):
     listings =  Listing.objects.order_by('-list_date').filter(is_published=True)
-    paginator = Paginator(listings, 1) # Show 25 contacts per page
+    paginator = Paginator(listings, 1) # Show 1 contacts per page
 
     page = request.GET.get('page')
     pages_listings = paginator.get_page(page)
@@ -16,7 +17,15 @@ def index(request):
     return render(request,'listings/index.html',context)
 
 def listing(request,listing_id):
-    return render(request,'listings/listing.html')
+        try:
+            listing = Listing.objects.get(id=listing_id)
+        except Listing.DoesNotExist:
+            raise Http404('Record does not exist')
+        #print(listing.query)
+        context = {
+            'listing': listing
+        }
+        return render(request,'listings/listing.html',context)
 
 def search(request):
      listings =  Listing.objects.order_by('-list_date').filter(is_published=True)
