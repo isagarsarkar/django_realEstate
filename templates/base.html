@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="{% static '/css/bootstrap.css' %}">
   <!-- Custom -->
   <link rel="stylesheet" href="{% static '/css/style.css' %}">
-    <title>Real Estate</title>
+    <title>Real Estate {% block title %} {% endblock %}</title>
 </head>
 <body>
  {% include 'partials/_topbar.html'%} 
